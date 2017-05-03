@@ -40,4 +40,4 @@ PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
 TARGET_CONTINUOUS_SPLASH_ENABLED := true
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.carbon.maintainer="Aniket Lamba"
+    ro.carbon.maintainer="Aniket"
