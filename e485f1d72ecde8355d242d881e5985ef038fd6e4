@@ -1,0 +1,4 @@
+{
+  "pushCert": "certificate version 0.1\npusher 4C56C166 1501436004 +0530\npushee ssh://review.carbonrom.org:29418/CarbonROM/android_device_xiaomi_cancro\nnonce 1501436008-2A99F24404C0CCD3B53AA3272046C7EBA32C5A8E\n\n0000000000000000000000000000000000000000 e485f1d72ecde8355d242d881e5985ef038fd6e4 refs/for/cr-5.1\n-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCAAdFiEEVM10jVzUx1f+AMxGpiniMUxWwWYFAll+GGQACgkQpiniMUxW\nwWYLGgf+PwzThg140tdNlmIEHREFlfP6jlAgB3KmwX399uBu7d/sdT6PuHBVyvyy\nTiy4ZwJKTAMQiWZml11nf7faSPsDZ3mth0bybWj36Cpwj+KsPvJ0PMjVe5DLsmvy\nzwVAjgdFx37qzslXVfLRGEkCq+yg9+P9AYsI8IkXhwmxaZaYiAvxHirF0LyqhQLL\n8KSm/tnnv1tqhRS0XHFQnxkyX691kiON0RWUafm75YpZKrQhINGmecXfL5Yb09Tn\nzRQsYn3mTpSrx8j03R9hkeouyA6aQM1DovrHQIrpOtW65Dfgm9oTvCr11VB3mMx2\n+D4Eu22JrkS5MujLwSdlaRgzcJMk6g\u003d\u003d\n\u003dkJwm\n-----END PGP SIGNATURE-----\n",
+  "comments": []
+}
