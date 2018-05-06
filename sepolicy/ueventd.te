@@ -1,0 +1,5 @@
+allow ueventd vfat:dir search;
+allow ueventd vfat:file { read open };
+allow ueventd vfat:file getattr;
+allow ueventd firmware_file:dir { search };
+allow ueventd firmware_file:file { getattr open read };

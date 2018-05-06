@@ -16,13 +16,13 @@
 #
 BOARD_VENDOR := xiaomi
 
-CANCRO_PATH := device/xiaomi/cancro
+DEVICE_PATH := device/xiaomi/cancro
 
 # ReleaseTools
-TARGET_RELEASETOOLS_EXTENSIONS := $(CANCRO_PATH)/releasetools
+TARGET_RELEASETOOLS_EXTENSIONS := $(DEVICE_PATH)/releasetools
 TARGET_RECOVERY_UPDATER_LIBS := librecovery_updater_cancro
 
-TARGET_BOARD_INFO_FILE ?= $(CANCRO_PATH)/board-info.txt
+TARGET_BOARD_INFO_FILE := $(DEVICE_PATH)/board-info.txt
 
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := MSM8974
@@ -41,34 +41,49 @@ TARGET_CPU_ABI2     := armeabi
 TARGET_CPU_SMP      := true
 TARGET_CPU_VARIANT  := krait
 
+# Binder API version
+TARGET_USES_64_BIT_BINDER := true
+
 # Flags
-BOARD_GLOBAL_CFLAGS   += -D__ARM_USE_PLD -D__ARM_CACHE_LINE_SIZE=64 -DUSE_RIL_VERSION_10
-BOARD_GLOBAL_CPPFLAGS += -DUSE_RIL_VERSION_10
+BOARD_GLOBAL_CFLAGS   += -D__ARM_USE_PLD -D__ARM_CACHE_LINE_SIZE=64
+
+# Filesystem
+TARGET_FS_CONFIG_GEN := $(DEVICE_PATH)/config.fs
 
 # Kernel
-BOARD_KERNEL_CMDLINE               := console=none vmalloc=340M androidboot.hardware=qcom msm_rtb.filter=0x3b7 ehci-hcd.park=3 androidboot.bootdevice=msm_sdcc.1
+BOARD_KERNEL_CMDLINE               := console=none vmalloc=340M androidboot.hardware=qcom msm_rtb.filter=0x3b7 ehci-hcd.park=3 androidboot.bootdevice=msm_sdcc.1 androidboot.selinux=permissive
+LZMA_RAMDISK_TARGETS               := boot,recovery
 BOARD_KERNEL_SEPARATED_DT          := true
 BOARD_KERNEL_BASE                  := 0x00000000
 BOARD_KERNEL_PAGESIZE              := 2048
+BOARD_KERNEL_IMAGE_NAME            := zImage
 BOARD_MKBOOTIMG_ARGS               := --ramdisk_offset 0x02000000 --tags_offset 0x01E00000
 TARGET_KERNEL_SOURCE               := kernel/xiaomi/cancro
 TARGET_KERNEL_ARCH                 := arm
-TARGET_KERNEL_CONFIG               := lineageos_cancro_defconfig
+TARGET_KERNEL_CONFIG               := cancro_user_defconfig
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := arm-linux-androideabi-
 BOARD_DTBTOOL_ARGS                 := -2
 
 # Vendor Init
 TARGET_INIT_VENDOR_LIB      := libinit_cancro
-TARGET_LIBINIT_DEFINES_FILE := $(CANCRO_PATH)/init/init_cancro.cpp
+TARGET_LIBINIT_DEFINES_FILE := $(DEVICE_PATH)/init/init_cancro.cpp
 
 # QCOM hardware
 BOARD_USES_QCOM_HARDWARE            := true
 TARGET_POWERHAL_VARIANT             := qcom
-TARGET_POWERHAL_SET_INTERACTIVE_EXT := $(CANCRO_PATH)/power/power_ext.c
+TARGET_POWERHAL_SET_INTERACTIVE_EXT := $(DEVICE_PATH)/power/power_ext.c
 
-# Audio
+# Audio (old)
 BOARD_USES_ALSA_AUDIO                      := true
 AUDIO_FEATURE_ENABLED_MULTI_VOICE_SESSIONS := true
+# New features
+AUDIO_FEATURE_ENABLED_COMPRESS_VOIP        := false
+AUDIO_FEATURE_ENABLED_HWDEP_CAL            := true
+AUDIO_FEATURE_ENABLED_NEW_SAMPLE_RATE      := true
+AUDIO_FEATURE_LOW_LATENCY_PRIMARY          := true
+# Seems good
+USE_CUSTOM_AUDIO_POLICY                    := 1
+USE_XML_AUDIO_POLICY_CONF 		   := 1
 
 # FM Radio
 BOARD_HAVE_QCOM_FM := true
@@ -77,9 +92,12 @@ TARGET_FM_LEGACY_PATCHLOADER := true
 # Bluetooth
 BOARD_HAVE_BLUETOOTH                        := true
 BOARD_HAVE_BLUETOOTH_QCOM                   := true
-BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(CANCRO_PATH)/bluetooth
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(DEVICE_PATH)/bluetooth
 QCOM_BT_USE_SMD_TTY                         := true
 BLUETOOTH_HCI_USE_MCT                       := true
+
+# Boot animation
+TARGET_BOOTANIMATION_HALF_RES := true
 
 # Radio
 TARGET_RIL_VARIANT                := caf
@@ -105,9 +123,12 @@ MAX_EGL_CACHE_KEY_SIZE := 12*1024
 MAX_EGL_CACHE_SIZE := 2048*1024
 
 # Camera
-TARGET_HAS_LEGACY_CAMERA_HAL1          := true
+TARGET_USES_MEDIA_EXTENSIONS           := true
 TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
 USE_DEVICE_SPECIFIC_CAMERA             := true
+
+# USB
+TARGET_USES_LEGACY_ADB_INTERFACE := true
 
 # Wifi
 BOARD_HAS_QCOM_WLAN              := true
@@ -117,6 +138,7 @@ BOARD_WPA_SUPPLICANT_DRIVER      := NL80211
 BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
 BOARD_HOSTAPD_DRIVER             := NL80211
 BOARD_HOSTAPD_PRIVATE_LIB        := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
+PRODUCT_VENDOR_MOVE_ENABLED      := true
 WIFI_DRIVER_FW_PATH_STA          := "sta"
 WIFI_DRIVER_FW_PATH_AP           := "ap"
 TARGET_PROVIDES_WCNSS_QMI        := true
@@ -136,24 +158,49 @@ BOARD_CACHEIMAGE_PARTITION_SIZE     := 393216000
 BOARD_PERSISTIMAGE_PARTITION_SIZE   := 16384000
 BOARD_FLASH_BLOCK_SIZE              := 131072
 
+# Extended filesystem support
+TARGET_EXFAT_DRIVER := sdfat
+
+# HIDL
+DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/manifest.xml
+DEVICE_MATRIX_FILE := $(DEVICE_PATH)/compatibility_matrix.xml
+
 # Recovery
 RECOVERY_FSTAB_VERSION             := 2
 TARGET_RECOVERY_DENSITY            := xhdpi
-TARGET_RECOVERY_FSTAB              := $(CANCRO_PATH)/rootdir/root/fstab.qcom
+TARGET_RECOVERY_FSTAB              := $(DEVICE_PATH)/rootdir/root/fstab.qcom
 TARGET_RECOVERY_PIXEL_FORMAT       := "RGBX_8888"
 TARGET_RECOVERY_LCD_BACKLIGHT_PATH := \"/sys/class/leds/lcd-backlight/brightness\"
 
-# CM Hardware
-BOARD_USES_CYANOGEN_HARDWARE = true
-BOARD_HARDWARE_CLASS += \
-    hardware/cyanogen/cmhw \
-    $(CANCRO_PATH)/cmhw
+# TWRP Support
+ifeq ($(WITH_TWRP),true)
+TARGET_RECOVERY_DEVICE_DIRS += $(DEVICE_PATH)/twrp
+RECOVERY_VARIANT := twrp
+TW_THEME := portrait_hdpi
+WITH_TWRP := true
+BOARD_HAS_NO_REAL_SDCARD                := true
+BOARD_RECOVERY_SWIPE                    := true
+RECOVERY_GRAPHICS_USE_LINELENGTH        := true
+RECOVERY_GRAPHICS_FORCE_USE_LINELENGTH := true
+TW_USE_MODEL_HARDWARE_ID_FOR_DEVICE_ID  := true
+TW_INCLUDE_CRYPTO                       := true
+TARGET_RECOVERY_QCOM_RTC_FIX            := true
+BOARD_SUPPRESS_SECURE_ERASE             := true
+BOARD_SUPPRESS_EMMC_WIPE                := true
+RECOVERY_SDCARD_ON_DATA                 := true
+TW_EXCLUDE_SUPERSU := true
+TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
+TW_MAX_BRIGHTNESS := 255
+TW_DEFAULT_BRIGHTNESS := 160
+TW_INCLUDE_NTFS_3G := true
+TW_TARGET_USES_QCOM_BSP := true
+endif
 
-# No old RPC for prop
-TARGET_NO_RPC := true
+# Lineage Hardware
+BOARD_HARDWARE_CLASS := $(DEVICE_PATH)/lineagehw
 
 # GPS HAL lives here
-TARGET_GPS_HAL_PATH         := $(CANCRO_PATH)/gps
+TARGET_GPS_HAL_PATH         := $(DEVICE_PATH)/gps
 TARGET_PROVIDES_GPS_LOC_API := true
 
 # Lights
@@ -162,29 +209,36 @@ TARGET_PROVIDES_LIBLIGHT := true
 # ANT+
 BOARD_ANT_WIRELESS_DEVICE := "vfs-prerelease"
 
-# Simple time service client
-BOARD_USES_QC_TIME_SERVICES := true
+# Use HW crypto for ODE
+TARGET_HW_DISK_ENCRYPTION := true
+TARGET_LEGACY_HW_DISK_ENCRYPTION := true
 
 # Charger
 BOARD_CHARGER_ENABLE_SUSPEND := true
-BOARD_CHARGER_DISABLE_INIT_BLANK := true
+
+# Remove secdiscard command
+TARGET_REMOVE_SECDISCARD_COMMAND := true
 
 # Enable dex-preoptimization to speed up first boot sequence
 ifeq ($(HOST_OS),linux)
   ifeq ($(TARGET_BUILD_VARIANT),user)
     ifeq ($(WITH_DEXPREOPT),)
       WITH_DEXPREOPT := true
+      WITH_DEXPREOPT_BOOT_IMG_AND_SYSTEM_SERVER_ONLY := true
     endif
   endif
 endif
 DONT_DEXPREOPT_PREBUILTS := true
 
-# SELinux policies
 # qcom sepolicy
 include device/qcom/sepolicy/sepolicy.mk
+include device/qcom/sepolicy/legacy-sepolicy.mk
 
-BOARD_SEPOLICY_DIRS += \
-        $(CANCRO_PATH)/sepolicy
+# sepolicy
+BOARD_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy
 
--include vendor/xiaomi/cancro/BoardConfigVendor.mk
--include vendor/qcom/binaries/msm8974/graphics/BoardConfigVendor.mk
+# Shims
+TARGET_LD_SHIM_LIBS := /system/lib/libcutils.so|libshim_atomic.so:/system/vendor/lib/libFaceProc.so|libshim_dso_handle.so:/system/bin/mm-qcamera-daemon|libshims_camera.so
+
+include vendor/xiaomi/cancro/BoardConfigVendor.mk
+
