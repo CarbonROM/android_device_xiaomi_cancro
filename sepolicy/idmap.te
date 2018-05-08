@@ -1,3 +1,0 @@
-#============= idmap ==============
-allow idmap sysfs:file { open read getattr };
-allow idmap installd:file read;

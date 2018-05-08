@@ -1,22 +1,4 @@
-#============= system_server ==============                                                                                                                                                                                                                                    
-allow system_server crash_dump:process getpgid;
-
-# for CMHardwareService access to TapToWake
-allow system_server proc_touchpanel:file rw_file_perms;
-allow system_server proc_touchpanel:dir { search };
-allow system_server touchscreen_file:file rw_file_perms;
-
-# examine battery state
-r_dir_file(system_server, sysfs_usb_supply);
-
-allow system_server sensors_persist_file:dir search;
-allow system_server sensors_persist_file:file read;
-allow system_server sensors_persist_file:file open;
-allow system_server sensors_persist_file:file getattr;
-
-allow system_server qmuxd_socket:dir { search write add_name };
-allow system_server qmuxd_socket:sock_file { create write };
-allow system_server sensors_device:chr_file rw_file_perms;
-allow system_server sensors:unix_stream_socket { connectto };
-allow system_server sensors_socket:sock_file rw_file_perms;
-allow system_server qmuxd:unix_stream_socket { connectto };
+#============= cmhw ==============
+allow system_server display_sysfs:file { read write };
+allow system_server mediaserver:unix_stream_socket write;
+allow system_server vibeamp_sysfs:file { read write open getattr };

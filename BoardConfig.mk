@@ -44,8 +44,11 @@ TARGET_CPU_VARIANT  := krait
 # Binder API version
 TARGET_USES_64_BIT_BINDER := true
 
+# Extended filesystem support
+TARGET_EXFAT_DRIVER := exfat
+
 # Flags
-#BOARD_GLOBAL_CFLAGS   += -D__ARM_USE_PLD -D__ARM_CACHE_LINE_SIZE=64
+BOARD_GLOBAL_CFLAGS   += -D__ARM_USE_PLD -D__ARM_CACHE_LINE_SIZE=64
 
 # Filesystem
 TARGET_FS_CONFIG_GEN := $(DEVICE_PATH)/config.fs
@@ -58,9 +61,9 @@ BOARD_KERNEL_BASE                  := 0x00000000
 BOARD_KERNEL_PAGESIZE              := 2048
 BOARD_KERNEL_IMAGE_NAME            := zImage
 BOARD_MKBOOTIMG_ARGS               := --ramdisk_offset 0x02000000 --tags_offset 0x01E00000
-TARGET_KERNEL_SOURCE               := kernel/xiaomi/cancro
+TARGET_KERNEL_SOURCE               := kernel/xiaomi/virgo
 TARGET_KERNEL_ARCH                 := arm
-TARGET_KERNEL_CONFIG               := cancro_user_defconfig
+TARGET_KERNEL_CONFIG               := virgo_defconfig
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := arm-linux-androideabi-
 BOARD_DTBTOOL_ARGS                 := -2
 
@@ -70,20 +73,28 @@ TARGET_LIBINIT_DEFINES_FILE := $(DEVICE_PATH)/init/init_cancro.cpp
 
 # QCOM hardware
 BOARD_USES_QCOM_HARDWARE            := true
-TARGET_POWERHAL_VARIANT             := qcom
+
+# Power
+TARGET_HAS_LEGACY_POWER_STATS := true
+TARGET_HAS_NO_WIFI_STATS := true
+TARGET_USES_INTERACTION_BOOST := true
 TARGET_POWERHAL_SET_INTERACTIVE_EXT := $(DEVICE_PATH)/power/power_ext.c
 
-# Audio (old)
+# Audio
 BOARD_USES_ALSA_AUDIO                      := true
-AUDIO_FEATURE_ENABLED_MULTI_VOICE_SESSIONS := true
-# New features
-AUDIO_FEATURE_ENABLED_COMPRESS_VOIP        := false
-AUDIO_FEATURE_ENABLED_HWDEP_CAL            := true
-AUDIO_FEATURE_ENABLED_NEW_SAMPLE_RATE      := true
-AUDIO_FEATURE_LOW_LATENCY_PRIMARY          := true
-# Seems good
 USE_CUSTOM_AUDIO_POLICY                    := 1
-USE_XML_AUDIO_POLICY_CONF 		   := 1
+TARGET_USES_QCOM_MM_AUDIO                  := true
+AUDIO_FEATURE_ENABLED_COMPRESS_VOIP        := true
+AUDIO_FEATURE_ENABLED_EXTN_FORMATS         := true
+AUDIO_FEATURE_ENABLED_MULTIPLE_TUNNEL      := true
+AUDIO_FEATURE_ENABLED_EXTN_POST_PROC       := true
+AUDIO_FEATURE_ENABLED_ANC_HEADSET          := false
+AUDIO_FEATURE_ENABLED_FLUENCE              := true
+AUDIO_FEATURE_ENABLED_HFP                  := true
+AUDIO_FEATURE_ENABLED_PROXY_DEVICE         := true
+AUDIO_FEATURE_ENABLED_USBAUDIO             := true
+AUDIO_FEATURE_ENABLED_SPKR_PROTECTION      := true
+AUDIO_FEATURE_ENABLED_MULTI_VOICE_SESSIONS := true
 
 # FM Radio
 BOARD_HAVE_QCOM_FM := true
@@ -127,9 +138,6 @@ TARGET_USES_MEDIA_EXTENSIONS           := true
 TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
 USE_DEVICE_SPECIFIC_CAMERA             := true
 
-# USB
-TARGET_USES_LEGACY_ADB_INTERFACE := true
-
 # Wifi
 BOARD_HAS_QCOM_WLAN              := true
 BOARD_WLAN_DEVICE                := qcwcn
@@ -158,8 +166,6 @@ BOARD_CACHEIMAGE_PARTITION_SIZE     := 393216000
 BOARD_PERSISTIMAGE_PARTITION_SIZE   := 16384000
 BOARD_FLASH_BLOCK_SIZE              := 131072
 
-# Extended filesystem support
-TARGET_EXFAT_DRIVER := sdfat
 
 # HIDL
 DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/manifest.xml
@@ -168,36 +174,12 @@ DEVICE_MATRIX_FILE := $(DEVICE_PATH)/compatibility_matrix.xml
 # Recovery
 RECOVERY_FSTAB_VERSION             := 2
 TARGET_RECOVERY_DENSITY            := xhdpi
-TARGET_RECOVERY_FSTAB              := $(DEVICE_PATH)/rootdir/root/fstab.qcom
+TARGET_RECOVERY_FSTAB              := $(DEVICE_PATH)/rootdir/etc/fstab.qcom
 TARGET_RECOVERY_PIXEL_FORMAT       := "RGBX_8888"
 TARGET_RECOVERY_LCD_BACKLIGHT_PATH := \"/sys/class/leds/lcd-backlight/brightness\"
 
-# TWRP Support
-ifeq ($(WITH_TWRP),true)
-TARGET_RECOVERY_DEVICE_DIRS += $(DEVICE_PATH)/twrp
-RECOVERY_VARIANT := twrp
-TW_THEME := portrait_hdpi
-WITH_TWRP := true
-BOARD_HAS_NO_REAL_SDCARD                := true
-BOARD_RECOVERY_SWIPE                    := true
-RECOVERY_GRAPHICS_USE_LINELENGTH        := true
-RECOVERY_GRAPHICS_FORCE_USE_LINELENGTH := true
-TW_USE_MODEL_HARDWARE_ID_FOR_DEVICE_ID  := true
-TW_INCLUDE_CRYPTO                       := true
-TARGET_RECOVERY_QCOM_RTC_FIX            := true
-BOARD_SUPPRESS_SECURE_ERASE             := true
-BOARD_SUPPRESS_EMMC_WIPE                := true
-RECOVERY_SDCARD_ON_DATA                 := true
-TW_EXCLUDE_SUPERSU := true
-TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
-TW_MAX_BRIGHTNESS := 255
-TW_DEFAULT_BRIGHTNESS := 160
-TW_INCLUDE_NTFS_3G := true
-TW_TARGET_USES_QCOM_BSP := true
-endif
-
 # Lineage Hardware
-BOARD_HARDWARE_CLASS := $(DEVICE_PATH)/lineagehw
+BOARD_HARDWARE_CLASS += $(DEVICE_PATH)/lineagehw
 
 # GPS HAL lives here
 TARGET_GPS_HAL_PATH         := $(DEVICE_PATH)/gps
@@ -213,18 +195,20 @@ BOARD_ANT_WIRELESS_DEVICE := "vfs-prerelease"
 TARGET_HW_DISK_ENCRYPTION := true
 TARGET_LEGACY_HW_DISK_ENCRYPTION := true
 
+# Simple time service client
+BOARD_USES_QC_TIME_SERVICES := true
+
+# Shim
+TARGET_LD_SHIM_LIBS := /system/lib/libcutils.so|libshim_atomic.so:/system/vendor/lib/libFaceProc.so|libshim_dso_handle.so
+
 # Charger
 BOARD_CHARGER_ENABLE_SUSPEND := true
-
-# Remove secdiscard command
-TARGET_REMOVE_SECDISCARD_COMMAND := true
 
 # Enable dex-preoptimization to speed up first boot sequence
 ifeq ($(HOST_OS),linux)
   ifeq ($(TARGET_BUILD_VARIANT),user)
     ifeq ($(WITH_DEXPREOPT),)
       WITH_DEXPREOPT := true
-      WITH_DEXPREOPT_BOOT_IMG_AND_SYSTEM_SERVER_ONLY := true
     endif
   endif
 endif
@@ -234,11 +218,6 @@ DONT_DEXPREOPT_PREBUILTS := true
 include device/qcom/sepolicy/sepolicy.mk
 include device/qcom/sepolicy/legacy-sepolicy.mk
 
-# sepolicy
 BOARD_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy
 
-# Shims
-TARGET_LD_SHIM_LIBS := /system/lib/libcutils.so|libshim_atomic.so:/system/vendor/lib/libFaceProc.so|libshim_dso_handle.so:/system/bin/mm-qcamera-daemon|libshims_camera.so
-
-include vendor/xiaomi/cancro/BoardConfigVendor.mk
-
+-include vendor/xiaomi/cancro/BoardConfigVendor.mk

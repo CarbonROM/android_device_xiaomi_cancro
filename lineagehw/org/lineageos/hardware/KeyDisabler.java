@@ -40,6 +40,7 @@ public class KeyDisabler {
 
     private static String KeyDisabler_path() {
         File ts = new File(CONTROL_PATH_TS);
+        File ts_640 = new File(CONTROL_PATH_TS_640);
         if (ts.exists()) {
             return CONTROL_PATH_TS;
         } else {
@@ -47,8 +48,7 @@ public class KeyDisabler {
         }
     };
 
-    public static boolean isSupported() { return FileUtils.isFileReadable(KeyDisabler_path()) &&
-        FileUtils.isFileWritable(KeyDisabler_path()); }
+    public static boolean isSupported() { return true; }
 
     public static boolean isActive() {
         return (FileUtils.readOneLine(KeyDisabler_path()).equals("0"));

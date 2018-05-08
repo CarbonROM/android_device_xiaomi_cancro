@@ -1,4 +1,2 @@
 #============= qmuxd ==============
-allow qmuxd radio_device:chr_file { read write ioctl open};
-allow qmuxd sysfs:file { open read getattr };
 allow qmuxd diag_device:chr_file { open read write };

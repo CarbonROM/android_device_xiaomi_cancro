@@ -1,2 +1,0 @@
-#============= kernel ==============
-allow kernel tmpfs:dir search;

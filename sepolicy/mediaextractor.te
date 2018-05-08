@@ -1,4 +1,0 @@
-#============= mediaextractor ==============
-allow mediaextractor sdcardfs:file { getattr read };
-allow mediaextractor sysfs:file { open read getattr };
-allow mediaextractor fuse:file { open read getattr };

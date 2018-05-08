@@ -1,6 +1,3 @@
-allow system_app proc_touchpanel:dir search;
-allow system_app proc_touchpanel:file rw_file_perms;
-allow system_app touchscreen_file:file rw_file_perms;
-
-allow system_app wificond:binder { call };
-allow system_app time_daemon:unix_stream_socket { connectto };
+#============= cmhw ==============
+allow system_app display_sysfs:file { read write };
+allow system_app vibeamp_sysfs:file { read write };
