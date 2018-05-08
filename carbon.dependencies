@@ -1,0 +1,20 @@
+[
+  {
+    "remote"     : "lineage",
+    "repository" : "LineageOS/android_device_qcom_common",
+    "target_path": "device/qcom/common",
+    "revision"   : "lineage-15.1"
+  },
+  {
+    "remote"     : "github",
+    "repository" : "ShivamKumarJha/android_kernel_xiaomi_cancro",
+    "target_path": "kernel/xiaomi/cancro",
+    "revision"   : "lineage-15.1"
+  },
+  {
+    "remote"     : "github",
+    "repository" : "ShivamKumarJha/proprietary_vendor_xiaomi",
+    "target_path": "vendor/xiaomi",
+    "revision"   : "lineage-15.1"
+  }
+]
